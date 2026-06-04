@@ -11,16 +11,32 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Import retrieval and llm_chain logic
-from retrieval import get_relevant_context
-from llm_chain import generate_rag_response
-from experimental_modes import render_physics_sandbox_page
-
 # Ensure stdout uses UTF-8 to prevent any encoding errors
 try:
     sys.stdout.reconfigure(encoding='utf-8')
 except AttributeError:
     pass
+
+# Auto-initialize vector database if it does not exist (essential for cloud deployments like Streamlit Community Cloud)
+persist_db_dir = "./chroma_db"
+if not os.path.exists(persist_db_dir) or not os.listdir(persist_db_dir):
+    try:
+        # Check if the source text reference exists, if not, write a warning
+        if os.path.exists("upwork_api_reference.txt"):
+            with st.spinner("First-time setup: Initializing Vector Database..."):
+                from vector_store import create_vector_store
+                with open("upwork_api_reference.txt", "r", encoding="utf-8") as f:
+                    text = f.read()
+                create_vector_store(text, persist_db_dir)
+        else:
+            st.error("Setup Error: 'upwork_api_reference.txt' is missing. Please run ingest.py locally first.")
+    except Exception as e:
+        st.error(f"Setup Error: Failed to automatically initialize vector database: {e}")
+
+# Import retrieval and llm_chain logic after auto-initialization block
+from retrieval import get_relevant_context
+from llm_chain import generate_rag_response
+from experimental_modes import render_physics_sandbox_page
 
 # Inject Premium Custom CSS for Rich Aesthetics, Dark Mode, Typography, and Glassmorphism
 st.markdown("""

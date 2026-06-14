@@ -2,8 +2,8 @@ import os
 import sys
 import logging
 from dotenv import load_dotenv
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
 from langchain_core.documents import Document
 
 # Import chunking logic from chunking.py

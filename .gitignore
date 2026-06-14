@@ -114,6 +114,3 @@ chroma_db/
 
 # Environmental Secrets
 .env
-
-# Streamlit logs/config
-.streamlit/

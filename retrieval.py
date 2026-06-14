@@ -2,7 +2,7 @@ import os
 import sys
 import logging
 from dotenv import load_dotenv
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from vector_store import initialize_embeddings
 
 # Configure logging
